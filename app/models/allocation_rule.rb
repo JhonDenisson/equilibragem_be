@@ -1,0 +1,2 @@
+class AllocationRule < ApplicationRecord
+end

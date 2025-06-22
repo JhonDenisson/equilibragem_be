@@ -10,50 +10,39 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_06_22_035225) do
+ActiveRecord::Schema[8.0].define(version: 2025_06_22_233454) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
-  create_table "budgets", force: :cascade do |t|
-    t.bigint "user_id", null: false, comment: "User reference"
-    t.bigint "category_id", null: false, comment: "Category reference"
-    t.integer "percent", null: false, comment: "percentage of the remaining balance that will be allocated to the budget"
-    t.integer "value_cents", null: false, comment: "Value cents of the budget"
+  create_table "allocation_rules", force: :cascade do |t|
+    t.bigint "user_id", comment: "User reference"
+    t.bigint "category_id", comment: "Category reference"
+    t.integer "percentage", default: 0, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["category_id"], name: "index_budgets_on_category_id"
-    t.index ["user_id"], name: "index_budgets_on_user_id"
+    t.index ["category_id"], name: "index_allocation_rules_on_category_id"
+    t.index ["user_id"], name: "index_allocation_rules_on_user_id"
   end
 
   create_table "categories", force: :cascade do |t|
+    t.bigint "user_id", comment: "User reference"
     t.string "name", null: false, comment: "Category name"
     t.integer "category_type", null: false, comment: "Category type"
-    t.bigint "user_id", null: false, comment: "User reference"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_categories_on_user_id"
   end
 
-  create_table "expenses", force: :cascade do |t|
-    t.bigint "user_id", null: false, comment: "User reference"
-    t.bigint "categories_id", null: false, comment: "Category reference"
-    t.string "description", comment: "Description of income"
-    t.integer "amount", null: false, comment: "Total amount of income"
+  create_table "summaries", force: :cascade do |t|
+    t.bigint "user_id", comment: "User reference"
+    t.integer "total_income"
+    t.integer "total_expense"
+    t.integer "fixed_expense"
+    t.integer "balance"
+    t.text "allocations"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["categories_id"], name: "index_expenses_on_categories_id"
-    t.index ["user_id"], name: "index_expenses_on_user_id"
-  end
-
-  create_table "incomes", force: :cascade do |t|
-    t.bigint "user_id", null: false, comment: "User reference"
-    t.bigint "categories_id", null: false, comment: "Category reference"
-    t.string "description", comment: "Description of income"
-    t.integer "amount", null: false, comment: "Total amount of income"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["categories_id"], name: "index_incomes_on_categories_id"
-    t.index ["user_id"], name: "index_incomes_on_user_id"
+    t.index ["user_id"], name: "index_summaries_on_user_id"
   end
 
   create_table "transactions", force: :cascade do |t|
@@ -75,4 +64,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_22_035225) do
     t.datetime "updated_at", null: false
     t.index ["email"], name: "index_users_on_email", unique: true
   end
+
+  add_foreign_key "allocation_rules", "categories"
+  add_foreign_key "allocation_rules", "users"
+  add_foreign_key "categories", "users"
+  add_foreign_key "summaries", "users"
 end
