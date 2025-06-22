@@ -5,7 +5,7 @@ class UsersController < ApplicationController
     if user.save
       payload = { user_id: user.id }
       token = Authentication.encode(payload)
-      render json: { token: token }, status: :created
+      render json: { user: PostUserSerializer.new(user), token: token }, status: :created
     else
       render json: { errors: user.errors.full_messages }, status: :unprocessable_entity
     end
