@@ -50,4 +50,10 @@ class TransactionsController < ApplicationController
       render json: { errors: data.errors.to_h }, status: :unprocessable_entity
     end
   end
+
+  def get_transactions
+    authorize Transaction
+    transactions = policy_scope(Transaction)
+    render json: transactions, each_serializer: Transactions::GetTransactionsSerializer, status: :ok
+  end
 end

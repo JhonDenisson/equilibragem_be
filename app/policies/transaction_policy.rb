@@ -10,6 +10,9 @@ class TransactionPolicy < ApplicationPolicy
   def post_transaction?
     true
   end
+  def get_transactions?
+    true
+  end
   class Scope
     def initialize(user, scope)
       @user = user

@@ -1,6 +1,6 @@
-module Categories
-  class GetCategoriesSerializer < ActiveModel::Serializer
-    attributes :id, :name, :category_type
+module Transactions
+  class GetTransactionsSerializer < ActiveModel::Serializer
+    attributes :transaction_type, :description, :amount, :transacted_at
   end
 end
 

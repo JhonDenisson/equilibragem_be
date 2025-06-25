@@ -10,6 +10,10 @@ class CategoryPolicy < ApplicationPolicy
   def post_category?
     true
   end
+
+  def get_categories?
+    true
+  end
   class Scope
     def initialize(user, scope)
       @user = user

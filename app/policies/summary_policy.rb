@@ -1,17 +1,13 @@
-class CategoryPolicy < ApplicationPolicy
-  attr_reader :user, :category
+class SummaryPolicy < ApplicationPolicy
+  attr_reader :user, :summary
 
-  def initialize(user, category)
+  def initialize(user, summary)
     super
     @user = user
-    @category = category
+    @summary = summary
   end
 
-  def post_category?
-    true
-  end
-
-  def get_categories?
+  def get_summary?
     true
   end
   class Scope

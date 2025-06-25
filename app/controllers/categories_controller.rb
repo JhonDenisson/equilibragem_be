@@ -17,4 +17,10 @@ class CategoriesController < ApplicationController
       render json: { errors: data.errors.to_h }, status: :unprocessable_entity
     end
   end
+
+  def get_categories
+    authorize Category
+    categories = policy_scope(Category)
+    render json: categories, each_serializer: Categories::GetCategoriesSerializer, status: :ok
+  end
 end

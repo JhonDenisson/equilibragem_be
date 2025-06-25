@@ -10,6 +10,10 @@ class AllocationRulePolicy < ApplicationPolicy
   def post_rule?
     true
   end
+
+  def get_rules?
+    true
+  end
   class Scope
     def initialize(user, scope)
       @user = user
