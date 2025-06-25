@@ -1,30 +1,53 @@
-class ApplicationController < ActionController::API
-  before_action :authenticate_request
+class TransactionsController < ApplicationController
+  def post_transaction
+    authorize Transaction
+    schema = Transactions::PostTransactionSchema.new
+    data = schema.call(params.to_unsafe_h)
 
-  include Pundit::Authorization
-  rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
+    if data.success?
+      data = data.to_h
 
-  private
-  def authenticate_request
-    header = request.headers["Authorization"]
-    header = header.split("Bearer ").last if header
-    decoded = Authentication.decode(header)
+      category = Category.find_by(name: data[:category])
+      return render json: { error: "Category has not founded" }, status: :not_found if category.nil?
+      data[:category] = category
 
-    if decoded
-      @current_user = User.find_by(id: decoded[:user_id])
-      render json: { error: "User not found" }, status: :unauthorized unless @current_user
+      ActiveRecord::Base.transaction do
+
+        transaction = Transaction.new(data.merge(category: category, user: current_user))
+        unless transaction.save
+          return render json: { errors: transaction.errors.full_messages }, status: :unprocessable_entity
+        end
+        transaction_date = transaction.transacted_at || transaction.created_at
+
+        summary = Summary.find_or_initialize_by(
+          user_id: current_user.id,
+          month: transaction_date.month,
+          year: transaction_date.year
+        )
+
+        if summary.persisted?
+          unless summary.update_with_transaction(transaction)
+            raise ActiveRecord::Rollback, "Failed to update summary"
+          end
+        else
+          summary = Summary.generate_for_user(current_user, transaction_date)
+          unless summary.persisted?
+            raise ActiveRecord::Rollback, "Failed to create summary"
+          end
+        end
+
+        render json: {
+          success: true,
+          transaction: transaction.as_json(only: [:id, :amount, :transaction_type, :date]),
+          summary: summary.as_json(only: [:month, :year, :total_income, :total_expense, :balance])
+        }, status: :created
+
+      rescue ActiveRecord::Rollback => e
+        render json: { errors: e.message }, status: :unprocessable_entity
+      end
+
     else
-      render json: { error: "Invalid token" }, status: :unauthorized
+      render json: { errors: data.errors.to_h }, status: :unprocessable_entity
     end
-  rescue ActiveRecord::RecordNotFound
-    render json: { error: "User not found" }, status: :unauthorized
-  end
-
-  def user_not_authorized
-    render json: { error: "You are not authorized to perform this action" }, status: :forbidden
-  end
-
-  def current_user
-    @current_user
   end
 end

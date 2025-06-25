@@ -7,6 +7,10 @@ Rails.application.routes.draw do
 
   post "/auth/generate_token" => "authentication#generate_token"
   post "/users" => "users#post_user"
+
+  post "/transactions" => "transactions#post_transaction"
+  post "/categories" => "categories#post_category"
+  post "/rules" => "allocation_rules#post_rule"
   # Defines the root path route ("/")
   # root "posts#index"
 end

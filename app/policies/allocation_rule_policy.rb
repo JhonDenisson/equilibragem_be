@@ -1,13 +1,13 @@
-class CategoryPolicy < ApplicationPolicy
-  attr_reader :user, :category
+class AllocationRulePolicy < ApplicationPolicy
+  attr_reader :user, :allocation_rule
 
-  def initialize(user, category)
+  def initialize(user, allocation_rule)
     super
     @user = user
-    @category = category
+    @allocation_rule = allocation_rule
   end
 
-  def post_category?
+  def post_rule?
     true
   end
   class Scope

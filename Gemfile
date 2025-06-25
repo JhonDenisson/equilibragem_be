@@ -18,6 +18,9 @@ gem "tzinfo-data", platforms: %i[ windows jruby ]
 # Active records serializer
 gem "active_model_serializers", "~> 0.10.0"
 
+# Requests parameters validations
+gem "dry-validation"
+
 # Use the database-backed adapters for Rails.cache, Active Job, and Action Cable
 gem "solid_cache"
 gem "solid_queue"
@@ -45,6 +48,8 @@ gem "jwt"
 # gem "rack-cors"
 
 group :development, :test do
+  gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
+
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"
 

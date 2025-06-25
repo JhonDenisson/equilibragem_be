@@ -1,13 +1,13 @@
-class TransactionPolicy < ApplicationPolicy
-  attr_reader :user, :transaction
+class CategoryPolicy < ApplicationPolicy
+  attr_reader :user, :category
 
-  def initialize(user, transaction)
+  def initialize(user, category)
     super
     @user = user
-    @transaction = transaction
+    @category = category
   end
 
-  def post_transaction?
+  def post_category?
     true
   end
   class Scope

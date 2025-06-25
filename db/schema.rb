@@ -15,12 +15,13 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_22_233454) do
   enable_extension "pg_catalog.plpgsql"
 
   create_table "allocation_rules", force: :cascade do |t|
-    t.bigint "user_id", comment: "User reference"
-    t.bigint "category_id", comment: "Category reference"
+    t.bigint "user_id", null: false, comment: "User reference"
+    t.bigint "category_id", null: false, comment: "Category reference"
     t.integer "percentage", default: 0, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["category_id"], name: "index_allocation_rules_on_category_id"
+    t.index ["user_id", "category_id"], name: "index_allocation_rules_on_user_id_and_category_id", unique: true
     t.index ["user_id"], name: "index_allocation_rules_on_user_id"
   end
 
@@ -34,25 +35,28 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_22_233454) do
   end
 
   create_table "summaries", force: :cascade do |t|
-    t.bigint "user_id", comment: "User reference"
-    t.integer "total_income"
-    t.integer "total_expense"
-    t.integer "fixed_expense"
-    t.integer "balance"
-    t.text "allocations"
+    t.bigint "user_id", null: false, comment: "User reference"
+    t.integer "month", null: false
+    t.integer "year", null: false
+    t.decimal "total_income", precision: 10, scale: 2, default: "0.0"
+    t.decimal "total_expense", precision: 10, scale: 2, default: "0.0"
+    t.decimal "balance", precision: 10, scale: 2, default: "0.0"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["user_id", "month", "year"], name: "index_summaries_on_user_id_and_month_and_year", unique: true
     t.index ["user_id"], name: "index_summaries_on_user_id"
   end
 
   create_table "transactions", force: :cascade do |t|
     t.bigint "user_id", null: false, comment: "User reference"
-    t.bigint "categories_id", null: false, comment: "Category reference"
+    t.bigint "category_id", null: false, comment: "Category reference"
+    t.integer "transaction_type", null: false, comment: "Transaction type"
     t.string "description", comment: "Description of income"
-    t.integer "amount", null: false, comment: "Total amount of income"
+    t.decimal "amount", precision: 10, scale: 2, null: false, comment: "Total amount of income"
+    t.datetime "transacted_at", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["categories_id"], name: "index_transactions_on_categories_id"
+    t.index ["category_id"], name: "index_transactions_on_category_id"
     t.index ["user_id"], name: "index_transactions_on_user_id"
   end
 

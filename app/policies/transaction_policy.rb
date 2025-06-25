@@ -1,25 +1,15 @@
-class CompanyAffiliatePolicy < ApplicationPolicy
-  attr_reader :user, :company_affiliate
+class TransactionPolicy < ApplicationPolicy
+  attr_reader :user, :transaction
 
-  def initialize(user, company_affiliate)
+  def initialize(user, transaction)
     super
     @user = user
-    @company_affiliate = company_affiliate
+    @transaction = transaction
   end
 
-  def get_splits?
+  def post_transaction?
     true
   end
-
-  def post_split?
-    true
-  end
-
-  def put_split?
-    company_affiliate.company_id == user.company_id
-  end
-
-
   class Scope
     def initialize(user, scope)
       @user = user
@@ -27,7 +17,7 @@ class CompanyAffiliatePolicy < ApplicationPolicy
     end
 
     def resolve
-      scope.where(company_id: user.company_id)
+      scope.where(user_id: user.id)
     end
 
     private

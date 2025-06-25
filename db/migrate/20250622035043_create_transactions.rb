@@ -2,9 +2,11 @@ class CreateTransactions < ActiveRecord::Migration[8.0]
   def up
     create_table :transactions do |t|
       t.references :user, null: false, comment: "User reference"
-      t.references :categories, null: false, comment: "Category reference"
+      t.references :category, null: false, comment: "Category reference"
+      t.integer :transaction_type, null: false, comment: "Transaction type"
       t.string :description, comment: "Description of income"
-      t.integer :amount, null: false, comment: "Total amount of income"
+      t.decimal :amount, precision: 10, scale: 2, null: false, comment: "Total amount of income"
+      t.datetime :transacted_at, null: false
       t.timestamps
     end
   end
