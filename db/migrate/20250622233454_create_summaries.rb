@@ -4,9 +4,9 @@ class CreateSummaries < ActiveRecord::Migration[8.0]
       t.references :user, foreign_key: true, null: false, comment: "User reference"
       t.integer :month, null: false
       t.integer :year, null: false
-      t.decimal :total_income, precision: 10, scale: 2, default: 0
-      t.decimal :total_expense, precision: 10, scale: 2, default: 0
-      t.decimal :balance, precision: 10, scale: 2, default: 0
+      t.integer :total_income, null: false
+      t.integer :total_expense, null: false
+      t.integer :balance, null: false
       t.timestamps
     end
     add_index :summaries, [:user_id, :month, :year], unique: true

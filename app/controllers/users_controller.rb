@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  skip_before_action :authenticate_request, only: [:post_user]
+  skip_before_action :authenticate_request
   def post_user
     authorize User
     schema = Users::PostUserSchema.new
@@ -9,8 +9,14 @@ class UsersController < ApplicationController
       user = User.new(data)
       if user.save
         payload = { user_id: user.id }
-        token = Authentication.encode(payload)
-        render json: { token: token }, status: :created
+        access_token = Authentication.encode(payload)
+        render json: {
+          success: true,
+          access_token: access_token,
+          token_type: "Bearer",
+          expires_in: 24.hours.to_i,
+          user: { id: user.id, name: user.name, email: user.email }
+        }, status: :created
       else
         render json: { errors: user.errors.full_messages }, status: :unprocessable_entity
       end

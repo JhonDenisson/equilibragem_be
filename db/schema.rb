@@ -38,9 +38,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_22_233454) do
     t.bigint "user_id", null: false, comment: "User reference"
     t.integer "month", null: false
     t.integer "year", null: false
-    t.decimal "total_income", precision: 10, scale: 2, default: "0.0"
-    t.decimal "total_expense", precision: 10, scale: 2, default: "0.0"
-    t.decimal "balance", precision: 10, scale: 2, default: "0.0"
+    t.integer "total_income", null: false
+    t.integer "total_expense", null: false
+    t.integer "balance", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id", "month", "year"], name: "index_summaries_on_user_id_and_month_and_year", unique: true
@@ -52,7 +52,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_22_233454) do
     t.bigint "category_id", null: false, comment: "Category reference"
     t.integer "transaction_type", null: false, comment: "Transaction type"
     t.string "description", comment: "Description of income"
-    t.decimal "amount", precision: 10, scale: 2, null: false, comment: "Total amount of income"
+    t.integer "amount", null: false, comment: "Total amount of income"
     t.datetime "transacted_at", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
