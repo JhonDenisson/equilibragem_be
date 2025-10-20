@@ -10,6 +10,7 @@ Rails.application.routes.draw do
 
   # TRANSACTIONS
   post "/transactions" => "transactions#post_transaction"
+  delete "/transactions" => "transactions#delete_transaction"
   get "/transactions" => "transactions#get_transactions"
 
   # CATEGORIES

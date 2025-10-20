@@ -2,7 +2,7 @@ class AuthenticationController < ApplicationController
   skip_before_action :authenticate_request
   def generate_token
     if params[:grant_type] == "password"
-      user = User.find_by(email: params[:email])
+      user = User.find_by(email: params[:username])
       return render json: { error: "user_not_found", error_description: "User not found" }, status: :not_found unless user.present?
 
       if user.authenticate(params[:password])

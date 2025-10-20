@@ -26,9 +26,9 @@ class Summary < ApplicationRecord
 
   def update_with_transaction(transaction)
 
-    return false unless transaction&.date && transaction.date.month == month && transaction.date.year == year
+    return false unless transaction&.transacted_at && transaction.transacted_at.month == month && transaction.transacted_at.year == year
 
-    if transaction.transaction_type == 0
+    if transaction.income?
       self.total_income += transaction.amount
     else
       self.total_expense += transaction.amount
