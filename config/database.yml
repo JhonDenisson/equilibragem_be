@@ -81,18 +81,16 @@ test:
 production:
   primary: &primary_production
     <<: *default
-    database: equilibragem_be_production
-    username: equilibragem_be
-    password: <%= ENV["EQUILIBRAGEM_BE_DATABASE_PASSWORD"] %>
+    url: <%= ENV.fetch("DATABASE_URL") %>
   cache:
     <<: *primary_production
-    database: equilibragem_be_production_cache
+    url: <%= ENV["CACHE_DATABASE_URL"] || ENV.fetch("DATABASE_URL") %>
     migrations_paths: db/cache_migrate
   queue:
     <<: *primary_production
-    database: equilibragem_be_production_queue
+    url: <%= ENV["QUEUE_DATABASE_URL"] || ENV.fetch("DATABASE_URL") %>
     migrations_paths: db/queue_migrate
   cable:
     <<: *primary_production
-    database: equilibragem_be_production_cable
+    url: <%= ENV["CABLE_DATABASE_URL"] || ENV.fetch("DATABASE_URL") %>
     migrations_paths: db/cable_migrate
